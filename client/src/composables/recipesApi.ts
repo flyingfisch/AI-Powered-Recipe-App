@@ -1,6 +1,6 @@
 import { ref } from "vue";
 
-type Recipe = {
+export type Recipe = {
     name: string;
     ingredients: string[];
     steps: string[];
@@ -35,15 +35,40 @@ export function useRecipesApi() {
             .then(response => response.json())
             .then(data => {
                 recipes.value = data.recipes;
+                data.recipes.forEach((recipe: Recipe) => recipe.selected = false);
+                saveRecipesToLocalStorage(recipes.value as Recipe[]);
+
                 loading.value = false;
+
                 console.log("Recipes fetched successfully:", data);
             })
             .catch(error => {
                 error.value = error;
                 loading.value = false;
+
                 console.error("Error fetching recipes:", error);
             });
     }
 
-    return { recipes, loading, error, fetchRecipes };
+    const getRecipesFromLocalStorage = async () => {
+        const storedRecipes = localStorage.getItem('recipes');
+
+        try {
+            if (storedRecipes) {
+                recipes.value = JSON.parse(storedRecipes);
+            } else {
+                recipes.value = [];
+            }
+        } catch {
+            recipes.value = [];
+        }
+    }
+
+    const saveRecipesToLocalStorage = async (recipes: Recipe[]) => {
+        localStorage.setItem('recipes', JSON.stringify(recipes));
+    }
+
+    getRecipesFromLocalStorage();
+
+    return { recipes, loading, error, fetchRecipes, saveRecipesToLocalStorage, getRecipesFromLocalStorage };
 }

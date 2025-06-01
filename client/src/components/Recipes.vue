@@ -21,9 +21,9 @@
     <v-row v-for="recipe in recipes">
       <v-col>
         <v-card
-          :variant="recipe.selected ? 'tonal' : 'flat'"
-          :color="recipe.selected ? 'grey' : 'primary'"
-          @click="recipe.selected = !recipe.selected"
+          variant="elevated"
+          :color="recipe.selected ? 'blue darken-4' : 'blue-grey darken-7'"
+          @click="handleSelectRecipeClick(recipe)"
         >
           <v-card-title>{{ recipe.name }}</v-card-title>
 
@@ -58,7 +58,7 @@
 import { ref } from 'vue';
 import { useRecipesApi } from '../composables/recipesApi';
 
-const selectedCuisines = ref([]);
+const selectedCuisines = ref<string[]>([]);
 
 const cuisines = ref<string[]>([
   'Italian',
@@ -71,9 +71,15 @@ const cuisines = ref<string[]>([
   'American'
 ]);
 
-const { recipes, loading, error, fetchRecipes } = useRecipesApi();
+const { recipes, loading, error, fetchRecipes, saveRecipesToLocalStorage, getRecipesFromLocalStorage } = useRecipesApi();
 
 const handleGenerateRecipesClick = () => {
   fetchRecipes(selectedCuisines.value);
+}
+
+const handleSelectRecipeClick = (recipe) => {
+  recipe.selected = !recipe.selected;
+
+  saveRecipesToLocalStorage();
 }
 </script>
