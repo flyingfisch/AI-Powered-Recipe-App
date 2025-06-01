@@ -9,17 +9,20 @@
       multiple
     ></v-select>
 
-    <v-btn @click="fetchRecipes">Generate Recipes!</v-btn>
+    <v-btn @click="handleGenerateRecipesClick">Generate Recipes!</v-btn>
 
-    <div>{{ recipeData }}</div>
+    <div v-if="loading">Loading recipes...</div>
+    <div v-if="error">Error getting recipes.</div>
+    <div>{{ recipes }}</div>
   </v-container>
 
 </template>
 
 <script setup lang="ts">
-import { useGeminiToFetchRecipes } from '../composables/gemini';
+import { ref } from 'vue';
+import { useRecipesApi } from '../composables/recipesApi';
 
-const selectedCuisines = ref<string[]>([]);
+const selectedCuisines = ref([]);
 
 const cuisines = ref<string[]>([
   'Italian',
@@ -32,24 +35,9 @@ const cuisines = ref<string[]>([
   'American'
 ]);
 
-const recipeData = ref();
+const { recipes, loading, error, fetchRecipes } = useRecipesApi();
 
-function fetchRecipes() {
-  if (selectedCuisines.value.length === 0) {
-    alert('Please select at least one cuisine.');
-    return;
-  }
-
-  recipeData.value = 'Loading recipes...';
-
-  useGeminiToFetchRecipes('Generate 5 recipes based on the following cuisines: ' + selectedCuisines.value.join(', '))
-    .then(recipes => {
-      console.log('Generated Recipes:', JSON.parse(recipes.text));
-      recipeData.value = recipes;
-      // Handle the recipes, e.g., display them in the UI
-    })
-    .catch(error => {
-      console.error('Error generating recipes:', error);
-    });
+const handleGenerateRecipesClick = () => {
+  fetchRecipes(selectedCuisines.value);
 }
 </script>
