@@ -8,3 +8,8 @@
 // @use 'vuetify/settings' with (
 //   $color-pack: false
 // );
+
+ul,
+ol {
+    list-style-position: inside;
+}

@@ -14,11 +14,11 @@ router.get("/recipes", async (req: Request, res: Response) => {
 
     const cuisines = req.query.cuisines as string;
     const prompt = cuisines.length > 0 ?
-        'Generate 5 recipes based on the following cuisines and include the amounts of ingredients: ' + cuisines :
+        'Generate 5 recipes based on the following cuisines: ' + cuisines + '. Include a list of ingredients.' :
         'Generate 5 recipes from random cuisines and include the amounts of ingredients.';
 
     const contents = prompt;
-    const model = 'gemini-2.5-flash-preview-04-17';
+    const model = 'gemini-1.5-flash';
 
     const config = {
         responseMimeType: 'application/json',
@@ -47,6 +47,7 @@ router.get("/recipes", async (req: Request, res: Response) => {
                             },
                         },
                     },
+                    propertyOrdering: ['name', 'ingredients', 'steps']
                 },
             },
         },
