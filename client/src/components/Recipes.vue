@@ -19,6 +19,7 @@
         </v-row>
 
         <recipe-card
+            v-if="!loading && !error"
             v-for="recipe in recipes"
             :recipe="recipe"
         ></recipe-card>

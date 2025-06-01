@@ -14,7 +14,7 @@ type RecipesApiResponse = {
 export function useRecipesApi() {
     const recipesApiUrl = import.meta.env.VITE_RECIPES_API_URL;
 
-    const recipes = ref<Recipe[] | null>(null);
+    const recipes = ref<Recipe[]>([]);
     const loading = ref(false);
     const error = ref(null);
 
@@ -28,19 +28,21 @@ export function useRecipesApi() {
         // Reset state before fetching new recipes
         error.value = null;
         loading.value = true;
-        recipes.value = null;
 
         // Fetch recipes
         fetch(recipesApiUrl + '/recipes?cuisines=' + cuisines.join(','))
             .then(response => response.json())
             .then(data => {
-                recipes.value = data.recipes;
-                data.recipes.forEach((recipe: Recipe) => recipe.selected = false);
-                saveRecipesToLocalStorage(recipes.value as Recipe[]);
+                const recipesFromApi = data.recipes.map((recipe: Recipe) => ({
+                    ...recipe,
+                    selected: false
+                }));
+                const selectedRecipes = recipes.value.filter(recipe => recipe.selected == true);
+
+                recipes.value = [...selectedRecipes, ...recipesFromApi];
+                saveRecipesToLocalStorage(recipesFromApi as Recipe[]);
 
                 loading.value = false;
-
-                console.log("Recipes fetched successfully:", data);
             })
             .catch(error => {
                 error.value = error;
