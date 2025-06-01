@@ -20,7 +20,11 @@
 
     <v-row v-for="recipe in recipes">
       <v-col>
-        <v-card>
+        <v-card
+          :variant="recipe.selected ? 'tonal' : 'flat'"
+          :color="recipe.selected ? 'grey' : 'primary'"
+          @click="recipe.selected = !recipe.selected"
+        >
           <v-card-title>{{ recipe.name }}</v-card-title>
 
           <v-card-subtitle>
