@@ -1,24 +1,26 @@
 <template>
-  <v-layout>
-    <v-app-bar title="AI Powered Recipes"></v-app-bar>
+    <v-layout>
+        <v-app-bar title="AI Powered Recipes"></v-app-bar>
 
-    <v-navigation-drawer>
-      <v-list nav>
-        <v-list-item
-          title="Recipes"
-          link
-        ></v-list-item>
-        <v-list-item
-          title="Shopping List"
-          link
-        ></v-list-item>
-      </v-list>
-    </v-navigation-drawer>
+        <v-navigation-drawer>
+            <v-list nav>
+                <v-list-item
+                    title="Recipes"
+                    link
+                    to="/"
+                ></v-list-item>
+                <v-list-item
+                    title="Shopping List"
+                    link
+                    to="/shopping-list"
+                ></v-list-item>
+            </v-list>
+        </v-navigation-drawer>
 
-    <v-main>
-      <router-view />
-    </v-main>
-  </v-layout>
+        <v-main>
+            <router-view />
+        </v-main>
+    </v-layout>
 </template>
 
 <script lang="ts" setup>
