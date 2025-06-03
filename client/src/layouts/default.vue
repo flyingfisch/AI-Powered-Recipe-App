@@ -4,11 +4,7 @@
 
         <v-navigation-drawer>
             <v-list nav>
-                <v-list-item
-                    title="Recipes"
-                    link
-                    to="/"
-                ></v-list-item>
+                <v-list-item title="Recipes" link to="/"></v-list-item>
                 <v-list-item
                     title="Shopping List"
                     link

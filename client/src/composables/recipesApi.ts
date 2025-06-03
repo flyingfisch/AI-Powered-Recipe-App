@@ -1,6 +1,6 @@
-import { ref } from "vue"
-import { useRecipesStore } from "@/stores/recipes"
-import type { Recipe } from "@/types/recipe"
+import { ref } from 'vue'
+import { useRecipesStore } from '@/stores/recipes'
+import type { Recipe } from '@/types/recipe'
 
 type RecipesApiResponse = {
     recipes: Recipe[]
@@ -27,24 +27,26 @@ export function useRecipesApi() {
 
         // Fetch recipes
         fetch(recipesApiUrl + '/recipes?cuisines=' + cuisines.join(','))
-            .then(response => response.json())
+            .then((response) => response.json())
             .then((data: RecipesApiResponse) => {
                 const recipesFromApi = data.recipes.map((recipe: Recipe) => ({
                     ...recipe,
-                    selected: false
+                    selected: false,
                 }))
-                const selectedRecipes = recipes.value.filter((recipe: Recipe) => recipe.selected == true)
+                const selectedRecipes = recipes.value.filter(
+                    (recipe: Recipe) => recipe.selected == true
+                )
 
                 recipes.value = [...selectedRecipes, ...recipesFromApi]
                 recipesStore.setRecipes(recipes.value)
 
                 loading.value = false
             })
-            .catch(error => {
+            .catch((error) => {
                 error.value = error
                 loading.value = false
 
-                console.error("Error fetching recipes:", error)
+                console.error('Error fetching recipes:', error)
             })
     }
 

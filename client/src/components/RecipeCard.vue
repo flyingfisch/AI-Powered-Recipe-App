@@ -3,24 +3,24 @@
         <v-col>
             <v-card
                 variant="elevated"
-                :color="recipe.selected ? 'blue darken-4' : 'blue-grey darken-7'"
+                :color="
+                    recipe.selected ? 'blue darken-4' : 'blue-grey darken-7'
+                "
                 @click="handleSelectRecipeClick(recipe)"
             >
                 <v-card-title>{{ recipe.name }}</v-card-title>
 
-                <v-card-subtitle>
-                    Ingredients
-                </v-card-subtitle>
+                <v-card-subtitle> Ingredients </v-card-subtitle>
 
                 <v-card-text>
                     <ul>
-                        <li v-for="ingredient in recipe.ingredients">{{ ingredient }}</li>
+                        <li v-for="ingredient in recipe.ingredients">
+                            {{ ingredient }}
+                        </li>
                     </ul>
                 </v-card-text>
 
-                <v-card-subtitle>
-                    Steps
-                </v-card-subtitle>
+                <v-card-subtitle> Steps </v-card-subtitle>
 
                 <v-card-text>
                     <ol>
@@ -33,27 +33,20 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { useRecipesApi } from '../composables/recipesApi';
-import { useRecipesStore } from '@/stores/recipes';
-import type { Recipe } from '@/types/recipe';
+import { ref } from 'vue'
+import { useRecipesApi } from '../composables/recipesApi'
+import { useRecipesStore } from '@/stores/recipes'
+import type { Recipe } from '@/types/recipe'
 
 const props = defineProps<{
-    recipe: Recipe;
-}>();
+    recipe: Recipe
+}>()
 
-const recipesStore = useRecipesStore();
+const recipesStore = useRecipesStore()
 
-const {
-    recipes,
-    loading,
-    error,
-    fetchRecipes,
-} = useRecipesApi();
-
+const { recipes, loading, error, fetchRecipes } = useRecipesApi()
 
 const handleSelectRecipeClick = (recipe) => {
-    recipe.selected = !recipe.selected;
-
+    recipe.selected = !recipe.selected
 }
 </script>

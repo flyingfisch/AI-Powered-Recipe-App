@@ -15,25 +15,25 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { useRecipesApi } from '../composables/recipesApi';
+import { ref } from 'vue'
+import { useRecipesApi } from '../composables/recipesApi'
 
 interface ShoppingList {
-    recipeName: string;
-    shoppingListItems: ShoppingListItem[];
+    recipeName: string
+    shoppingListItems: ShoppingListItem[]
 }
 
 interface ShoppingListItem {
-    name: string;
+    name: string
 }
 
-const shoppingLists = ref<ShoppingList[]>([]);
+const shoppingLists = ref<ShoppingList[]>([])
 shoppingLists.value = recipes.value
-    .filter(recipe => recipe.selected)
-    .map(recipe => ({
+    .filter((recipe) => recipe.selected)
+    .map((recipe) => ({
         recipeName: recipe.name,
-        shoppingListItems: recipe.ingredients.map(ingredient => ({
-            name: ingredient
-        }))
-    }));
+        shoppingListItems: recipe.ingredients.map((ingredient) => ({
+            name: ingredient,
+        })),
+    }))
 </script>

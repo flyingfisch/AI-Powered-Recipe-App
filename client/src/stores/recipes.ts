@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia';
-import type { Recipe } from '@/types/recipe';
+import { defineStore } from 'pinia'
+import type { Recipe } from '@/types/recipe'
 
 export const useRecipesStore = defineStore('recipes', {
     state: () => ({
@@ -7,8 +7,8 @@ export const useRecipesStore = defineStore('recipes', {
     }),
     actions: {
         setRecipes(newRecipes: Recipe[]) {
-            this.recipes = newRecipes;
-        }
+            this.recipes = newRecipes
+        },
     },
     persist: true,
-});
+})

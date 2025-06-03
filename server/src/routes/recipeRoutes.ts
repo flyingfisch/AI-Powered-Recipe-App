@@ -1,24 +1,24 @@
-import { Router, Request, Response } from "express";
-import {
-    GoogleGenAI,
-    Type,
-} from '@google/genai';
+import { Router, Request, Response } from 'express'
+import { GoogleGenAI, Type } from '@google/genai'
 
-const router = Router();
-const geminiApiKey = process.env.GEMINI_API_KEY as string;
+const router = Router()
+const geminiApiKey = process.env.GEMINI_API_KEY as string
 
-router.get("/recipes", async (req: Request, res: Response) => {
+router.get('/recipes', async (req: Request, res: Response) => {
     const ai = new GoogleGenAI({
-        apiKey: geminiApiKey
-    });
+        apiKey: geminiApiKey,
+    })
 
-    const cuisines = req.query.cuisines as string;
-    const prompt = cuisines.length > 0 ?
-        'Generate 5 recipes based on the following cuisines: ' + cuisines + '. Include a list of ingredients.' :
-        'Generate 5 recipes from random cuisines and include the amounts of ingredients.';
+    const cuisines = req.query.cuisines as string
+    const prompt =
+        cuisines.length > 0
+            ? 'Generate 5 recipes based on the following cuisines: ' +
+              cuisines +
+              '. Include a list of ingredients.'
+            : 'Generate 5 recipes from random cuisines and include the amounts of ingredients.'
 
-    const contents = prompt;
-    const model = 'gemini-1.5-flash';
+    const contents = prompt
+    const model = 'gemini-1.5-flash'
 
     const config = {
         responseMimeType: 'application/json',
@@ -47,20 +47,20 @@ router.get("/recipes", async (req: Request, res: Response) => {
                             },
                         },
                     },
-                    propertyOrdering: ['name', 'ingredients', 'steps']
+                    propertyOrdering: ['name', 'ingredients', 'steps'],
                 },
             },
         },
-    };
+    }
 
     const response = await ai.models.generateContent({
         model,
         config,
         contents,
-    });
+    })
 
-    const responseJson = response.text ? JSON.parse(response.text) : {};
-    res.json(responseJson);
-});
+    const responseJson = response.text ? JSON.parse(response.text) : {}
+    res.json(responseJson)
+})
 
-export default router;
+export default router

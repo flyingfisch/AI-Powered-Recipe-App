@@ -11,7 +11,9 @@
                     multiple
                 ></v-select>
 
-                <v-btn @click="handleGenerateRecipesClick">Generate Recipes!</v-btn>
+                <v-btn @click="handleGenerateRecipesClick"
+                    >Generate Recipes!</v-btn
+                >
 
                 <div v-if="loading">Loading recipes...</div>
                 <div v-if="error">Error getting recipes.</div>
@@ -40,7 +42,7 @@ const cuisines = ref<string[]>([
     'French',
     'Japanese',
     'Mediterranean',
-    'American'
+    'American',
 ])
 
 const {
@@ -49,7 +51,7 @@ const {
     error,
     fetchRecipes,
     saveRecipesToLocalStorage,
-    getRecipesFromLocalStorage
+    getRecipesFromLocalStorage,
 } = useRecipesApi()
 
 const handleGenerateRecipesClick = () => {
