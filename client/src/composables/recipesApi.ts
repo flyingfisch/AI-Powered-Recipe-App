@@ -1,76 +1,52 @@
-import { ref } from "vue";
-
-export type Recipe = {
-    name: string;
-    ingredients: string[];
-    steps: string[];
-    selected: boolean;
-}
+import { ref } from "vue"
+import { useRecipesStore } from "@/stores/recipes"
+import type { Recipe } from "@/types/recipe"
 
 type RecipesApiResponse = {
-    recipes: Recipe[];
+    recipes: Recipe[]
 }
 
 export function useRecipesApi() {
-    const recipesApiUrl = import.meta.env.VITE_RECIPES_API_URL;
+    const recipesApiUrl = import.meta.env.VITE_RECIPES_API_URL
+    const recipesStore = useRecipesStore()
 
-    const recipes = ref<Recipe[]>([]);
-    const loading = ref(false);
-    const error = ref(null);
+    const recipes = ref<Recipe[]>(recipesStore.recipes)
+    const loading = ref<boolean>(false)
+    const error = ref(null)
 
     const fetchRecipes = async (cuisines: string[]) => {
         // Validation
         if (cuisines.length === 0) {
-            alert('Please select at least one cuisine.');
-            return;
+            alert('Please select at least one cuisine.')
+            return
         }
 
         // Reset state before fetching new recipes
-        error.value = null;
-        loading.value = true;
+        error.value = null
+        loading.value = true
 
         // Fetch recipes
         fetch(recipesApiUrl + '/recipes?cuisines=' + cuisines.join(','))
             .then(response => response.json())
-            .then(data => {
+            .then((data: RecipesApiResponse) => {
                 const recipesFromApi = data.recipes.map((recipe: Recipe) => ({
                     ...recipe,
                     selected: false
-                }));
-                const selectedRecipes = recipes.value.filter(recipe => recipe.selected == true);
+                }))
+                const selectedRecipes = recipes.value.filter((recipe: Recipe) => recipe.selected == true)
 
-                recipes.value = [...selectedRecipes, ...recipesFromApi];
-                saveRecipesToLocalStorage(recipesFromApi as Recipe[]);
+                recipes.value = [...selectedRecipes, ...recipesFromApi]
+                recipesStore.setRecipes(recipes.value)
 
-                loading.value = false;
+                loading.value = false
             })
             .catch(error => {
-                error.value = error;
-                loading.value = false;
+                error.value = error
+                loading.value = false
 
-                console.error("Error fetching recipes:", error);
-            });
+                console.error("Error fetching recipes:", error)
+            })
     }
 
-    const getRecipesFromLocalStorage = async () => {
-        const storedRecipes = localStorage.getItem('recipes');
-
-        try {
-            if (storedRecipes) {
-                recipes.value = JSON.parse(storedRecipes);
-            } else {
-                recipes.value = [];
-            }
-        } catch {
-            recipes.value = [];
-        }
-    }
-
-    const saveRecipesToLocalStorage = async (recipes: Recipe[]) => {
-        localStorage.setItem('recipes', JSON.stringify(recipes));
-    }
-
-    getRecipesFromLocalStorage();
-
-    return { recipes, loading, error, fetchRecipes, saveRecipesToLocalStorage, getRecipesFromLocalStorage };
+    return { recipes, loading, error, fetchRecipes }
 }

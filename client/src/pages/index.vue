@@ -1,5 +1,5 @@
 <template>
-  <Recipes />
+    <recipe-generator />
 </template>
 
 <script lang="ts" setup>

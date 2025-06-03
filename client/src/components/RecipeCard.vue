@@ -35,24 +35,25 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { useRecipesApi } from '../composables/recipesApi';
-import type { Recipe } from '../composables/recipesApi';
+import { useRecipesStore } from '@/stores/recipes';
+import type { Recipe } from '@/types/recipe';
 
 const props = defineProps<{
     recipe: Recipe;
 }>();
+
+const recipesStore = useRecipesStore();
 
 const {
     recipes,
     loading,
     error,
     fetchRecipes,
-    saveRecipesToLocalStorage,
-    getRecipesFromLocalStorage
 } = useRecipesApi();
+
 
 const handleSelectRecipeClick = (recipe) => {
     recipe.selected = !recipe.selected;
 
-    saveRecipesToLocalStorage();
 }
 </script>

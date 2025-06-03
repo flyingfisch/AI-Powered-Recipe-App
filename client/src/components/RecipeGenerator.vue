@@ -24,14 +24,13 @@
             :recipe="recipe"
         ></recipe-card>
     </v-container>
-
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRecipesApi } from '../composables/recipesApi';
+import { ref } from 'vue'
+import { useRecipesApi } from '../composables/recipesApi'
 
-const selectedCuisines = ref<string[]>([]);
+const selectedCuisines = ref<string[]>([])
 
 const cuisines = ref<string[]>([
     'Italian',
@@ -42,7 +41,7 @@ const cuisines = ref<string[]>([
     'Japanese',
     'Mediterranean',
     'American'
-]);
+])
 
 const {
     recipes,
@@ -51,9 +50,9 @@ const {
     fetchRecipes,
     saveRecipesToLocalStorage,
     getRecipesFromLocalStorage
-} = useRecipesApi();
+} = useRecipesApi()
 
 const handleGenerateRecipesClick = () => {
-    fetchRecipes(selectedCuisines.value);
+    fetchRecipes(selectedCuisines.value)
 }
 </script>
