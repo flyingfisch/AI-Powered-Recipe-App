@@ -9,6 +9,15 @@ export const useRecipesStore = defineStore('recipes', {
         setRecipes(newRecipes: Recipe[]) {
             this.recipes = newRecipes
         },
+        updateRecipe(updatedRecipe: Recipe) {
+            const index = this.recipes.findIndex(
+                (recipe) => recipe.id === updatedRecipe.id
+            )
+
+            if (index !== -1) {
+                this.recipes[index] = updatedRecipe
+            }
+        },
     },
     persist: true,
 })

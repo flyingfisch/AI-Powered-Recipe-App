@@ -1,5 +1,18 @@
 import { Router, Request, Response } from 'express'
 import { GoogleGenAI, Type } from '@google/genai'
+import { nanoid } from 'nanoid'
+
+export type Recipe = {
+    id: string
+    name: string
+    ingredients: string[]
+    steps: string[]
+    selected: boolean
+}
+
+type GetRecipesApiResponse = {
+    recipes: Recipe[]
+}
 
 const router = Router()
 const geminiApiKey = process.env.GEMINI_API_KEY as string
@@ -59,8 +72,16 @@ router.get('/recipes', async (req: Request, res: Response) => {
         contents,
     })
 
-    const responseJson = response.text ? JSON.parse(response.text) : {}
-    res.json(responseJson)
+    const parsedRecipes = response.text
+        ? (JSON.parse(response.text) as GetRecipesApiResponse)
+        : { recipes: [] }
+
+    const recipesResponse = parsedRecipes.recipes.map((recipe: Recipe) => ({
+        ...recipe,
+        id: nanoid(),
+    }))
+
+    res.json(recipesResponse)
 })
 
 export default router
