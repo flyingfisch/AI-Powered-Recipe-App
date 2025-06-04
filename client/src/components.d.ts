@@ -10,12 +10,8 @@ declare module 'vue' {
   export interface GlobalComponents {
     AppFooter: typeof import('./components/AppFooter.vue')['default']
     RecipeCard: typeof import('./components/RecipeCard.vue')['default']
-    RecipeCards: typeof import('./components/RecipeCards.vue')['default']
-    RecipeGenerator: typeof import('./components/RecipeGenerator.vue')['default']
-    Recipes: typeof import('./components/Recipes.vue')['default']
+    RecipeShoppingList: typeof import('./components/RecipeShoppingList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    ShoppingList: typeof import('./components/ShoppingList.vue')['default']
-    ShoppingLists: typeof import('./components/ShoppingLists.vue')['default']
   }
 }

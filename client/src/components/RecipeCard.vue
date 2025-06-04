@@ -6,7 +6,7 @@
                 :color="
                     recipe.selected ? 'blue darken-4' : 'blue-grey darken-7'
                 "
-                @click="handleSelectRecipeClick(recipe)"
+                @click="$emit('recipeSelected', recipe)"
             >
                 <v-card-title>{{ recipe.name }}</v-card-title>
 
@@ -40,7 +40,11 @@ const props = defineProps<{
     recipe: Recipe
 }>()
 
-const handleSelectRecipeClick = (recipe) => {
-    $emit('recipeSelected', recipe)
+const emit = defineEmits<{
+    (event: 'recipeSelected', recipe: Recipe): void
+}>()
+
+const handleSelectRecipeClick = () => {
+    emit('recipeSelected', recipe.value)
 }
 </script>

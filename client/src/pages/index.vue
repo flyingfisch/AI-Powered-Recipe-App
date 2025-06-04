@@ -24,7 +24,7 @@
             v-if="!loading && !error"
             v-for="recipe in recipes"
             :recipe="recipe"
-            @recipeSelected="handleSelectRecipeClick"
+            @recipe-selected="handleSelectRecipe"
         ></recipe-card>
     </v-container>
 </template>
@@ -32,6 +32,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useRecipesApi } from '../composables/recipesApi'
+import { useRecipesStore } from '../stores/recipes'
 
 const selectedCuisines = ref<string[]>([])
 
@@ -47,12 +48,15 @@ const cuisines = ref<string[]>([
 ])
 
 const { recipes, loading, error, fetchRecipes } = useRecipesApi()
+const recipesStore = useRecipesStore()
 
 const handleGenerateRecipesClick = () => {
     fetchRecipes(selectedCuisines.value)
 }
 
-const handleSelectRecipeClick = (recipe) => {
+const handleSelectRecipe = (recipe) => {
     recipe.selected = !recipe.selected
+
+    recipesStore.updateRecipe(recipe)
 }
 </script>

@@ -2,10 +2,6 @@ import { ref } from 'vue'
 import { useRecipesStore } from '@/stores/recipes'
 import type { Recipe } from '@/types/recipe'
 
-type RecipesApiResponse = {
-    recipes: Recipe[]
-}
-
 export function useRecipesApi() {
     const recipesApiUrl = import.meta.env.VITE_RECIPES_API_URL
     const recipesStore = useRecipesStore()
@@ -28,8 +24,8 @@ export function useRecipesApi() {
         // Fetch recipes
         fetch(recipesApiUrl + '/recipes?cuisines=' + cuisines.join(','))
             .then((response) => response.json())
-            .then((data: RecipesApiResponse) => {
-                const recipesFromApi = data.recipes.map((recipe: Recipe) => ({
+            .then((data: Recipe[]) => {
+                const recipesFromApi = data.map((recipe: Recipe) => ({
                     ...recipe,
                     selected: false,
                 }))
