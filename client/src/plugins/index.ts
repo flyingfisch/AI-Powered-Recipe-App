@@ -18,7 +18,7 @@ export function registerPlugins(app: App) {
     'auth0 vite settings',
     import.meta.env.VITE_AUTH0_DOMAIN,
     import.meta.env.VITE_AUTH0_CLIENT_ID,
-    window.location.origin
+    window.location.origin,
   )
   app.use(vuetify).use(router).use(pinia).use(auth0)
 }

@@ -11,9 +11,9 @@ app.use(express.json())
 app.use('/api', recipeRoutes)
 
 app.get('/', (req: Request, res: Response) => {
-    res.send('Welcome to the Node.js + TypeScript API!')
+  res.send('Welcome to the Node.js + TypeScript API!')
 })
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`)
+  console.log(`Server is running on port ${PORT}`)
 })
