@@ -15,7 +15,7 @@
                         :title="item.name"
                         @click="item.checked = !item.checked"
                     >
-                        <template #prepend="{ isSelected, select }">
+                        <template #prepend>
                             <v-list-item-action start>
                                 <v-checkbox-btn
                                     v-model="item.checked"

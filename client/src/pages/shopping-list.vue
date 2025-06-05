@@ -8,6 +8,7 @@
 
         <recipe-shopping-list
             v-for="shoppingList in shoppingLists"
+            :key="shoppingList.recipeId"
             :shopping-list="shoppingList"
             @item-selected="saveShoppingListToStore(shoppingList)"
         />
@@ -25,9 +26,15 @@ const shoppingListsStore = useShoppingListsStore()
 
 const shoppingLists = ref<ShoppingList[]>([])
 
-// First get shopping lists from the store, then merge with shopping lists from newly selected recipes.
+// First get shopping lists from the store, filtering out lists that don't have a recipe (the user deselected these)
+// Then merge with shopping lists from newly selected recipes.
 // Since each recipe is immutable, we don't need to worry about updating existing shopping lists.
-const storedShoppingLists = shoppingListsStore.shoppingLists
+const storedShoppingLists = shoppingListsStore.shoppingLists.filter((list) =>
+    recipesStore.recipes.some(
+        (recipe) => recipe.id === list.recipeId && recipe.selected
+    )
+)
+
 const shoppingListsFromNewRecipes = recipesStore.recipes
     .filter(
         (recipe) =>
