@@ -1,72 +1,45 @@
 <template>
-    <v-container>
-        <v-row class="pb-0">
-            <v-col>
-                <h1>Recipes</h1>
+  <v-container class="text-center" v-if="!isAuthenticated">
+    <v-row>
+      <v-col>
+        <h1>Welcome to the AI Powered Recipe App</h1>
+        <p>Please log in to continue.</p>
+      </v-col>
+    </v-row>
 
-                <v-select
-                    label="Select Cuisines"
-                    v-model="selectedCuisines"
-                    :items="cuisines"
-                    multiple
-                ></v-select>
-            </v-col>
-        </v-row>
-        <v-row class="mb-4">
-            <v-col class="text-center">
-                <v-btn
-                    @click="handleGenerateRecipesClick"
-                    size="large"
-                    rounded="xl"
-                    color="primary"
-                >
-                    Generate Recipes!
-                </v-btn>
+    <v-row>
+      <v-col class="text-center">
+        <v-btn @click="handleLogin">Log in</v-btn>
+      </v-col>
+    </v-row>
+  </v-container>
 
-                <div v-if="loading">Loading recipes...</div>
-                <div v-if="error">Error getting recipes.</div>
-            </v-col>
-        </v-row>
+  <v-container v-if="isAuthenticated">
+    <v-row>
+      <v-col>
+        <h1>Welcome, {{ user?.name }}</h1>
+        <p>You are logged in!</p>
+      </v-col>
+    </v-row>
 
-        <recipe-card
-            v-if="!loading && !error"
-            v-for="recipe in recipes"
-            :key="recipe.id"
-            :recipe="recipe"
-            @recipe-selected="handleSelectRecipe"
-        ></recipe-card>
-    </v-container>
+    <v-row>
+      <v-col class="text-center">
+        <v-btn @click="handleLogout">Log out</v-btn>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { useRecipesApi } from '@/composables/recipesApi'
-import { useRecipesStore } from '@/stores/recipes'
-import type { Recipe } from '@/types/recipe'
+import { useAuth0 } from '@auth0/auth0-vue'
 
-const selectedCuisines = ref<string[]>([])
+const { loginWithRedirect, user, isAuthenticated, logout } = useAuth0()
 
-const cuisines = ref<string[]>([
-    'Italian',
-    'Chinese',
-    'Mexican',
-    'Indian',
-    'French',
-    'Japanese',
-    'Mediterranean',
-    'American',
-])
-
-const { recipes, loading, error, fetchRecipes } = useRecipesApi()
-const recipesStore = useRecipesStore()
-
-const handleGenerateRecipesClick = () => {
-    fetchRecipes(selectedCuisines.value)
+const handleLogin = () => {
+  loginWithRedirect()
 }
 
-const handleSelectRecipe = (recipe: Recipe) => {
-    recipe.selected = !recipe.selected
-
-    recipesStore.updateRecipe(recipe)
+const handleLogout = () => {
+  logout({ logoutParams: { returnTo: window.location.origin } })
 }
 </script>
