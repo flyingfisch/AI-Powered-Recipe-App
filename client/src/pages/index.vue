@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-row>
+        <v-row class="pb-0">
             <v-col>
                 <h1>Recipes</h1>
 
@@ -10,8 +10,16 @@
                     :items="cuisines"
                     multiple
                 ></v-select>
-
-                <v-btn @click="handleGenerateRecipesClick">
+            </v-col>
+        </v-row>
+        <v-row class="mb-4">
+            <v-col class="text-center">
+                <v-btn
+                    @click="handleGenerateRecipesClick"
+                    size="large"
+                    rounded="xl"
+                    color="primary"
+                >
                     Generate Recipes!
                 </v-btn>
 

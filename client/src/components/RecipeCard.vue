@@ -10,23 +10,32 @@
             >
                 <v-card-title>{{ recipe.name }}</v-card-title>
 
-                <v-card-subtitle>Ingredients</v-card-subtitle>
-
-                <v-card-text>
-                    <ul>
-                        <li v-for="ingredient in recipe.ingredients">
-                            {{ ingredient }}
-                        </li>
-                    </ul>
-                </v-card-text>
-
-                <v-card-subtitle>Steps</v-card-subtitle>
-
-                <v-card-text>
-                    <ol>
-                        <li v-for="step in recipe.steps">{{ step }}</li>
-                    </ol>
-                </v-card-text>
+                <v-row no-gutters align="stretch" class="d-flex">
+                    <v-col cols="12" sm="6" class="bg-background">
+                        <v-list dense class="bg-background">
+                            <v-list-subheader>Ingredients</v-list-subheader>
+                            <v-list-item
+                                v-for="(
+                                    ingredient, index
+                                ) in recipe.ingredients"
+                                :key="index"
+                                :title="ingredient"
+                                dense
+                            ></v-list-item>
+                        </v-list>
+                    </v-col>
+                    <v-col cols="12" sm="6" class="bg-background">
+                        <v-list dense class="bg-background">
+                            <v-list-subheader>Steps</v-list-subheader>
+                            <v-list-item
+                                v-for="(step, index) in recipe.steps"
+                                :key="index"
+                                :title="step"
+                                dense
+                            ></v-list-item>
+                        </v-list>
+                    </v-col>
+                </v-row>
             </v-card>
         </v-col>
     </v-row>
