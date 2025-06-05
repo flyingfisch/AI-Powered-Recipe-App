@@ -1,4 +1,5 @@
 export type ShoppingList = {
+    recipeId: string
     recipeName: string
     shoppingListItems: ShoppingListItem[]
 }

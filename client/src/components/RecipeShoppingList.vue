@@ -4,28 +4,25 @@
             <v-card variant="elevated" color="blue-grey darken-7">
                 <v-card-title>{{ shoppingList.recipeName }}</v-card-title>
 
-                <v-list>
+                <v-list
+                    select-strategy="leaf"
+                    @update:selected="$emit('item-selected')"
+                >
                     <v-list-item
                         v-for="(item, index) in shoppingList.shoppingListItems"
                         :key="index"
-                        :value="index"
-                        @click="$emit('itemChecked', item)"
+                        :value="item.name"
+                        :title="item.name"
+                        @click="item.checked = !item.checked"
                     >
-                        <template #prepend>
-                            <v-icon
-                                v-if="item.checked"
-                                icon="mdi-check"
-                                color="green"
-                            ></v-icon>
-                            <v-icon
-                                v-else
-                                icon="mdi-checkbox-blank-outline"
-                                color="grey"
-                            ></v-icon>
+                        <template #prepend="{ isSelected, select }">
+                            <v-list-item-action start>
+                                <v-checkbox-btn
+                                    v-model="item.checked"
+                                    @click.stop
+                                ></v-checkbox-btn>
+                            </v-list-item-action>
                         </template>
-                        <v-list-item-title>
-                            {{ item.name }}
-                        </v-list-item-title>
                     </v-list-item>
                 </v-list>
             </v-card>

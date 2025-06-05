@@ -10,7 +10,7 @@
             >
                 <v-card-title>{{ recipe.name }}</v-card-title>
 
-                <v-card-subtitle> Ingredients </v-card-subtitle>
+                <v-card-subtitle>Ingredients</v-card-subtitle>
 
                 <v-card-text>
                     <ul>
@@ -43,8 +43,4 @@ const props = defineProps<{
 const emit = defineEmits<{
     (event: 'recipeSelected', recipe: Recipe): void
 }>()
-
-const handleSelectRecipeClick = () => {
-    emit('recipeSelected', recipe.value)
-}
 </script>
