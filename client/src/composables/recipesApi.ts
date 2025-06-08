@@ -1,10 +1,12 @@
 import { ref } from 'vue'
 import { useRecipesStore } from '@/stores/recipes'
+import { useAuth0 } from '@auth0/auth0-vue'
 import type { Recipe } from '@/types/recipe'
 
 export function useRecipesApi() {
   const recipesApiUrl = import.meta.env.VITE_RECIPES_API_URL
   const recipesStore = useRecipesStore()
+  const { getAccessTokenSilently } = useAuth0()
 
   const recipes = ref<Recipe[]>(recipesStore.recipes)
   const loading = ref<boolean>(false)
@@ -22,7 +24,21 @@ export function useRecipesApi() {
     loading.value = true
 
     // Fetch recipes
-    fetch(recipesApiUrl + '/recipes?cuisines=' + cuisines.join(','))
+    const accessToken = await getAccessTokenSilently({
+      authorizationParams: {
+        audience: import.meta.env.VITE_AUTH0_AUDIENCE,
+      },
+    })
+
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+
+    fetch(recipesApiUrl + '/recipes?cuisines=' + cuisines.join(','), options)
       .then((response) => response.json())
       .then((data: Recipe[]) => {
         const recipesFromApi = data.map((recipe: Recipe) => ({
@@ -30,7 +46,7 @@ export function useRecipesApi() {
           selected: false,
         }))
         const selectedRecipes = recipes.value.filter(
-          (recipe: Recipe) => recipe.selected == true,
+          (recipe: Recipe) => recipe.selected == true
         )
 
         recipes.value = [...selectedRecipes, ...recipesFromApi]
