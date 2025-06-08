@@ -39,6 +39,7 @@ const handleLogin = () => {
   loginWithRedirect({
     appState: { target: '/recipes' },
     authorizationParams: {
+      redirect_uri: `${window.location.origin}/callback`,
       scope: 'openid profile email read:recipes',
     },
   })
