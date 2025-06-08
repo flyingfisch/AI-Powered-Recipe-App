@@ -15,6 +15,11 @@
   </v-container>
 </template>
 
+<route lang="yaml">
+meta:
+  requiresAuth: true
+</route>
+
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useRecipesStore } from '@/stores/recipes'
@@ -31,15 +36,15 @@ const shoppingLists = ref<ShoppingList[]>([])
 // Since each recipe is immutable, we don't need to worry about updating existing shopping lists.
 const storedShoppingLists = shoppingListsStore.shoppingLists.filter((list) =>
   recipesStore.recipes.some(
-    (recipe) => recipe.id === list.recipeId && recipe.selected,
-  ),
+    (recipe) => recipe.id === list.recipeId && recipe.selected
+  )
 )
 
 const shoppingListsFromNewRecipes = recipesStore.recipes
   .filter(
     (recipe) =>
       recipe.selected &&
-      !storedShoppingLists.some((list) => list.recipeId === recipe.id),
+      !storedShoppingLists.some((list) => list.recipeId === recipe.id)
   )
   .map<ShoppingList>((recipe) => ({
     recipeId: recipe.id,

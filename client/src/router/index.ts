@@ -8,10 +8,20 @@
 import { createRouter, createWebHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 import { routes } from 'vue-router/auto-routes'
+import { authGuard } from '@auth0/auth0-vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: setupLayouts(routes),
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth) {
+    console.log('Auth guard triggered for route:', to.fullPath)
+    authGuard(to)
+  }
+
+  next()
 })
 
 // Workaround for https://github.com/vitejs/vite/issues/11804

@@ -38,6 +38,11 @@
   </v-container>
 </template>
 
+<route lang="yaml">
+meta:
+  requiresAuth: true
+</route>
+
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useRecipesApi } from '@/composables/recipesApi'

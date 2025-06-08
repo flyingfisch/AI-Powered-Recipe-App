@@ -36,7 +36,9 @@ import { useAuth0 } from '@auth0/auth0-vue'
 const { loginWithRedirect, user, isAuthenticated, logout } = useAuth0()
 
 const handleLogin = () => {
-  loginWithRedirect()
+  loginWithRedirect({
+    appState: { target: '/recipes' },
+  })
 }
 
 const handleLogout = () => {
