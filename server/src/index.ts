@@ -1,8 +1,9 @@
 import 'dotenv/config'
-import express, { Request, Response } from 'express'
+import express, { NextFunction, Request, Response } from 'express'
 import recipeRoutes from './routes/recipeRoutes'
 import { auth } from 'express-oauth2-jwt-bearer'
 import cors from 'cors'
+import bodyParser from 'body-parser'
 
 // Setup
 const app = express()
@@ -15,8 +16,20 @@ const jwtCheck = auth({
   tokenSigningAlg: 'RS256',
 })
 
+// Middleware
+// TODO: move to a separate file
+const jsonErrorHandler = (
+  err: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  res.status(500).send({ error: err })
+}
+
 app.use(cors())
 app.use(jwtCheck)
+app.use(bodyParser.json())
 app.use(express.json())
 
 // Routes
@@ -27,8 +40,10 @@ app.get('/authorized', (req: Request, res: Response) => {
 })
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Welcome to the Node.js + TypeScript API!')
+  res.send('Welcome to the AI Recipes API.')
 })
+
+app.use(jsonErrorHandler)
 
 // Start server
 app.listen(port, () => {

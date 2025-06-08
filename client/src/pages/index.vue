@@ -38,6 +38,9 @@ const { loginWithRedirect, user, isAuthenticated, logout } = useAuth0()
 const handleLogin = () => {
   loginWithRedirect({
     appState: { target: '/recipes' },
+    authorizationParams: {
+      scope: 'openid profile email read:recipes',
+    },
   })
 }
 

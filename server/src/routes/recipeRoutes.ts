@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express'
 import { GoogleGenAI, Type } from '@google/genai'
 import { nanoid } from 'nanoid'
+import { requiredScopes } from 'express-oauth2-jwt-bearer'
 
 export type Recipe = {
   id: string
@@ -17,71 +18,75 @@ type GetRecipesApiResponse = {
 const router = Router()
 const geminiApiKey = process.env.GEMINI_API_KEY as string
 
-router.get('/recipes', async (req: Request, res: Response) => {
-  const ai = new GoogleGenAI({
-    apiKey: geminiApiKey,
-  })
+router.get(
+  '/recipes',
+  requiredScopes('read:recipes'),
+  async (req: Request, res: Response) => {
+    const ai = new GoogleGenAI({
+      apiKey: geminiApiKey,
+    })
 
-  const cuisines = req.query.cuisines as string
-  const prompt =
-    cuisines.length > 0
-      ? 'Generate 5 recipes based on the following cuisines: ' +
-        cuisines +
-        '. Include a list of ingredients.'
-      : 'Generate 5 recipes from random cuisines and include the amounts of ingredients.'
+    const cuisines = req.query.cuisines as string
+    const prompt =
+      cuisines.length > 0
+        ? 'Generate 5 recipes based on the following cuisines: ' +
+          cuisines +
+          '. Include a list of ingredients.'
+        : 'Generate 5 recipes from random cuisines and include the amounts of ingredients.'
 
-  const contents = prompt
-  const model = 'gemini-1.5-flash'
+    const contents = prompt
+    const model = 'gemini-1.5-flash'
 
-  const config = {
-    responseMimeType: 'application/json',
-    responseSchema: {
-      type: Type.OBJECT,
-      properties: {
-        recipes: {
-          type: Type.ARRAY,
-          items: {
-            type: Type.OBJECT,
-            properties: {
-              ingredients: {
-                type: Type.ARRAY,
-                items: {
+    const config = {
+      responseMimeType: 'application/json',
+      responseSchema: {
+        type: Type.OBJECT,
+        properties: {
+          recipes: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                ingredients: {
+                  type: Type.ARRAY,
+                  items: {
+                    type: Type.STRING,
+                  },
+                },
+                steps: {
+                  type: Type.ARRAY,
+                  items: {
+                    type: Type.STRING,
+                  },
+                },
+                name: {
                   type: Type.STRING,
                 },
-              },
-              steps: {
-                type: Type.ARRAY,
-                items: {
-                  type: Type.STRING,
-                },
-              },
-              name: {
-                type: Type.STRING,
               },
             },
+            propertyOrdering: ['name', 'ingredients', 'steps'],
           },
-          propertyOrdering: ['name', 'ingredients', 'steps'],
         },
       },
-    },
+    }
+
+    const response = await ai.models.generateContent({
+      model,
+      config,
+      contents,
+    })
+
+    const parsedRecipes = response.text
+      ? (JSON.parse(response.text) as GetRecipesApiResponse)
+      : { recipes: [] }
+
+    const recipesResponse = parsedRecipes.recipes.map((recipe: Recipe) => ({
+      ...recipe,
+      id: nanoid(),
+    }))
+
+    res.json(recipesResponse)
   }
-
-  const response = await ai.models.generateContent({
-    model,
-    config,
-    contents,
-  })
-
-  const parsedRecipes = response.text
-    ? (JSON.parse(response.text) as GetRecipesApiResponse)
-    : { recipes: [] }
-
-  const recipesResponse = parsedRecipes.recipes.map((recipe: Recipe) => ({
-    ...recipe,
-    id: nanoid(),
-  }))
-
-  res.json(recipesResponse)
-})
+)
 
 export default router

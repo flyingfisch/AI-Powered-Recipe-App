@@ -27,6 +27,7 @@ export function useRecipesApi() {
     const accessToken = await getAccessTokenSilently({
       authorizationParams: {
         audience: import.meta.env.VITE_AUTH0_AUDIENCE,
+        scope: 'read:recipes',
       },
     })
 

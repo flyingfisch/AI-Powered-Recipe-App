@@ -8,7 +8,7 @@
 import { createRouter, createWebHistory } from 'vue-router/auto'
 import { setupLayouts } from 'virtual:generated-layouts'
 import { routes } from 'vue-router/auto-routes'
-import { authGuard } from '@auth0/auth0-vue'
+import { authGuard, useAuth0 } from '@auth0/auth0-vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,8 +16,17 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  const { user } = useAuth0()
+
   if (to.meta.requiresAuth) {
     authGuard(to)
+  }
+
+  if (
+    to.meta.requiresRole == 'User' &&
+    !user.value?.[import.meta.env.VITE_AUTH0_ROLES_NAMESPACE]?.includes('User')
+  ) {
+    return next('/request-access')
   }
 
   next()

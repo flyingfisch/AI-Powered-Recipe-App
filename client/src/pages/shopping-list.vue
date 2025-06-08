@@ -18,6 +18,7 @@
 <route lang="yaml">
 meta:
   requiresAuth: true
+  requiresRole: User
 </route>
 
 <script lang="ts" setup>

@@ -41,6 +41,7 @@
 <route lang="yaml">
 meta:
   requiresAuth: true
+  requiresRole: User
 </route>
 
 <script lang="ts" setup>
@@ -48,6 +49,7 @@ import { ref } from 'vue'
 import { useRecipesApi } from '@/composables/recipesApi'
 import { useRecipesStore } from '@/stores/recipes'
 import type { Recipe } from '@/types/recipe'
+import { useAuth0 } from '@auth0/auth0-vue'
 
 const selectedCuisines = ref<string[]>([])
 
@@ -61,6 +63,9 @@ const cuisines = ref<string[]>([
   'Mediterranean',
   'American',
 ])
+
+const { user } = useAuth0()
+console.log('User:', user)
 
 const { recipes, loading, error, fetchRecipes } = useRecipesApi()
 const recipesStore = useRecipesStore()
