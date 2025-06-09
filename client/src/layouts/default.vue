@@ -12,7 +12,11 @@
       ></v-btn>
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" :permanent="!$vuetify.display.xs">
+    <v-navigation-drawer
+      v-model="drawer"
+      mobile-breakpoint="xs"
+      :temporary="$vuetify.display.mobile"
+    >
       <v-list nav v-if="isAuthenticated">
         <v-list-item title="Recipes" link to="/recipes"></v-list-item>
         <v-list-item
@@ -33,13 +37,15 @@
 import { ref } from 'vue'
 import { useAppStore } from '@/stores/app'
 import { useAuth0 } from '@auth0/auth0-vue'
+import { useDisplay } from 'vuetify'
 
 const { isAuthenticated } = useAuth0()
 
 const appStore = useAppStore()
+const { mobile } = useDisplay()
 
 const theme = ref(appStore.theme)
-const drawer = ref(false)
+const drawer = ref(!mobile.value)
 
 function handleThemeToggle() {
   theme.value = theme.value === 'light' ? 'dark' : 'light'
