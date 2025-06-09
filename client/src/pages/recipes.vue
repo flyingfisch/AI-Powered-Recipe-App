@@ -64,9 +64,6 @@ const cuisines = ref<string[]>([
   'American',
 ])
 
-const { user } = useAuth0()
-console.log('User:', user)
-
 const { recipes, loading, error, fetchRecipes } = useRecipesApi()
 const recipesStore = useRecipesStore()
 

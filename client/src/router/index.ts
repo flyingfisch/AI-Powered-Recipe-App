@@ -20,16 +20,15 @@ router.beforeEach((to, from, next) => {
 
   if (to.meta.requiresAuth) {
     authGuard(to)
-  }
-
-  if (
+    next()
+  } else if (
     to.meta.requiresRole == 'User' &&
     !user.value?.[import.meta.env.VITE_AUTH0_ROLES_NAMESPACE]?.includes('User')
   ) {
-    return next('/request-access')
+    next('/request-access')
+  } else {
+    next()
   }
-
-  next()
 })
 
 // Workaround for https://github.com/vitejs/vite/issues/11804

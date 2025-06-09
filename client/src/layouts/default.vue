@@ -12,7 +12,7 @@
       ></v-btn>
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" temporary>
+    <v-navigation-drawer v-model="drawer" :permanent="!$vuetify.display.xs">
       <v-list nav v-if="isAuthenticated">
         <v-list-item title="Recipes" link to="/recipes"></v-list-item>
         <v-list-item
